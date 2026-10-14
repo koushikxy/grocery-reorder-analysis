@@ -83,3 +83,7 @@ mysql -u root -p < analysis.sql
 ```
 
 Tools: MySQL 8.4
+
+---
+
+Koushik Maity · [LinkedIn](https://www.linkedin.com/in/ksmaity/) · [GitHub](https://github.com/koushikxy) · [Portfolio](https://koushikmaity.netlify.app/)

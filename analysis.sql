@@ -3,7 +3,7 @@ USE instacart;
 DROP TABLE IF EXISTS product_stats, order_stats, top_items;
 
 CREATE TABLE product_stats (PRIMARY KEY (product_id))
-SELECT product_id, COUNT(*) AS times_ordered, SUM(reordered) AS reorders, SUM(add_to_cart_order = 1) AS first_in_cart
+SELECT product_id, COUNT(*) AS times_ordered, SUM(reordered) AS reorders
 FROM order_products
 GROUP BY product_id;
 
@@ -79,10 +79,10 @@ ORDER BY times_ordered DESC;
 
 
 WITH running AS (
-    SELECT times_ordered,
-           ROW_NUMBER() OVER (ORDER BY times_ordered DESC) AS product_rank,
-           SUM(times_ordered) OVER (ORDER BY times_ordered DESC, product_id) / SUM(times_ordered) OVER () AS cum_share
+    SELECT ROW_NUMBER() OVER w AS product_rank,
+           SUM(times_ordered) OVER w / SUM(times_ordered) OVER () AS cum_share
     FROM product_stats
+    WINDOW w AS (ORDER BY times_ordered DESC, product_id)
 )
 SELECT
     MIN(CASE WHEN cum_share >= 0.5 THEN product_rank END) AS products_for_50pct,
